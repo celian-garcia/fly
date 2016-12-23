@@ -11,6 +11,7 @@ using namespace std;
 namespace fly {
     string hello (const string& name);
     vector<cv::Vec3f> create_cloud ();
+    void progressive_populate_cloud (vector<cv::Vec3f>& cloud_ref);
 } /* namespace fly */
 
 

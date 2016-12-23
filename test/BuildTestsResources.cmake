@@ -15,7 +15,7 @@ foreach(resource ${resources})
         get_filename_component(dirname ${dir} NAME)
     endwhile()
 
-    set(output "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/resources/${output}/${filename}")
+    set(output "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/${output}/${filename}")
     add_custom_command(
             COMMENT "Moving updated resource-file '${filename}'"
             OUTPUT ${output}
