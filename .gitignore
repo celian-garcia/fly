@@ -1,4 +1,5 @@
-/.idea
-/bin
-/lib
+.idea
 .vs
+bin
+lib
+build
