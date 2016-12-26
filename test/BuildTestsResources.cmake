@@ -26,5 +26,5 @@ foreach(resource ${resources})
     )
     add_custom_target(${filename} ALL DEPENDS ${resource} ${output})
 
-    add_dependencies(Test ${filename})
+    add_dependencies(${FLY_TEST_NAME} ${filename})
 endforeach()

@@ -1,10 +1,14 @@
 find_package (Boost COMPONENTS system filesystem unit_test_framework REQUIRED)
-include_directories (${FLY_SOURCE_DIR}/src ${Boost_INCLUDE_DIRS})
 add_definitions (-DBOOST_TEST_DYN_LINK)
-add_executable (Test test.cpp)
 
-target_link_libraries (Test
-        Fly
+file(GLOB FLY_TEST_FILES test*.cpp)
+include_directories (${FLY_HEADERS} ${Boost_INCLUDE_DIRS})
+
+message(STATUS ${FLY_TEST_NAME})
+message(STATUS ${FLY_TEST_FILES})
+add_executable (${FLY_TEST_NAME} ${FLY_TEST_FILES})
+target_link_libraries (${FLY_TEST_NAME}
+        ${FLY_LIB_NAME}
         ${Boost_FILESYSTEM_LIBRARY}
         ${Boost_SYSTEM_LIBRARY}
         ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
