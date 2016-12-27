@@ -2,7 +2,7 @@
 
 #include "./fly.h"
 int main(int argc, char* argv[]) {
-    fly::CloudPopulate cp = fly::CloudPopulate();
+    fly::CloudPopulate<fly::cloud> cp;
     cp.run();
 
     fly::Hello h = fly::Hello("Célian");

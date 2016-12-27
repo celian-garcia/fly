@@ -1,8 +1,6 @@
 // Copyright 2016 <Célian Garcia>
 
 #include "./fly.h"
-#include <windows.h>
-#include <iostream>
 
 namespace fly {
     void
@@ -10,18 +8,8 @@ namespace fly {
         std::cout << this->mName << std::endl;
     }
 
-    CloudPopulate::CloudPopulate() {
-        this->cl_result = cloud();
-    }
-    void
-    CloudPopulate::run() {
-        for (int i = 0; i < 100; ++i) {
-            Sleep(1000);
-            this->cl_result.add_point(cv::Vec3f(i, i, i));
-        }
-    }
-
-    std::string Hello::get_name() {
+    std::string
+    Hello::get_name() {
         return this->mName;
     }
 
