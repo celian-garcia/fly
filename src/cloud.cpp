@@ -6,7 +6,7 @@ namespace fly {
 
 std::ostream&
 operator<<(std::ostream& os, const cloud& cl) {
-    for (cv::Vec3f v : cl.container) {
+    for (auto& elt : cl.map) {
         os << '(' << v[0] << ", " << v[1] << ", " << v[2] << ")\n";
     }
     return os;

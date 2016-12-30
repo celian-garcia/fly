@@ -1,17 +1,16 @@
 // Copyright 2016 <Célian Garcia>
 
-#ifndef INCLUDE_FLY_H_
-#define INCLUDE_FLY_H_
-#include <windows.h>
+#ifndef INCLUDE_FLY_HPP_
+#define INCLUDE_FLY_HPP_
 #include <string>
 #include <iostream>
 #include <opencv2/core.hpp>
-#include "./cloud.h"
+#include "./cloud.hpp"
 
 namespace fly {
 
 //////////////////////////////////////////////////////////////////
-// Little snippet found here:
+// Code found here:
 // http://www.gotw.ca/publications/mxc++-item-4.htm
 //
 // Permits to check if a template type derive from a given class.
@@ -32,7 +31,7 @@ class IsDerivedFrom {
     enum { Is = sizeof(Test(static_cast<D*>(0))) == sizeof(Yes) };
     IsDerivedFrom() { void(*p)(D*) = Constraints; }
 };
-// --> end of snippet /////////////////////////////////////////////
+// --> end ///////////////////////////////////////////////////////
 
 class FlyRunnable {
     virtual void run() = 0;
@@ -60,7 +59,6 @@ class CloudPopulate : public FlyRunnable, private IsDerivedFrom<T, cloud> {
     }
     void run() {
         for (int i = 0; i < 10; ++i) {
-            Sleep(1000);
             this->cloud.add_point(cv::Vec3f(i, i, i));
         }
     }
@@ -75,4 +73,4 @@ class Recontruction3D : public FlyRunnable {
 } /* namespace fly */
 
 
-#endif  // INCLUDE_FLY_H_
+#endif  // INCLUDE_FLY_HPP_

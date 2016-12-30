@@ -1,6 +1,7 @@
 // Copyright 2016 <Célian Garcia>
 
 #define BOOST_TEST_MODULE "C++ unit tests for Fly Library"
+#include <windows.h>
 #include <iostream>
 #include "./fly.h"
 #include <boost/thread.hpp>
