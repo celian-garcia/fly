@@ -1,6 +1,6 @@
 // Copyright 2016 <Célian Garcia>
 
-#include "./fly.h"
+#include "./fly.hpp"
 
 namespace fly {
     void

@@ -3,7 +3,7 @@
 #define BOOST_TEST_MODULE "C++ unit tests for Fly Library"
 #include <windows.h>
 #include <iostream>
-#include "./fly.h"
+#include "./fly.hpp"
 #include <boost/thread.hpp>
 #include <boost/test/unit_test.hpp>
 
