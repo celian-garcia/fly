@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 find_package( OpenCV REQUIRED )
+SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 
 project(FLY)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -std=gnu++11")
