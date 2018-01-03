@@ -58,6 +58,13 @@ enable_testing()
 add_test(NAME FlyTestRunner COMMAND ${FLY_TEST_TARGET})
 ## =========== ## ===================================
 
+## Custom target to run install from Clion ## ============================
+add_custom_target(install_${FLY_LIB_TARGET}
+        "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}" --target install
+        DEPENDS ${FLY_LIB_TARGET}
+        COMMENT "Installing ${FLY_LIB_TARGET}")
+## =========== ## ===================================
+
 ## pkg_config configuration file ## ============================
 CONFIGURE_FILE(fly.pc.in fly.pc @ONLY)
 install(FILES ${CMAKE_BINARY_DIR}/fly.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
