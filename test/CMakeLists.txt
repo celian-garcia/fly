@@ -5,8 +5,6 @@ if (NOT TARGET ${FLY_TEST_TARGET})
 
     get_target_property(FLY_LIB_INCLUDE_DIRS ${FLY_LIB_TARGET} INCLUDE_DIRECTORIES)
 
-    add_test(NAME MyTest COMMAND Test)
-
     add_executable(${FLY_TEST_TARGET}
             test_main.cpp)
 
