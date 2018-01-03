@@ -15,7 +15,7 @@ class CloudThread : public cloud {
     using cloud::add_point;
     virtual void add_point(cv::Vec3f v) {
         boost::lock_guard<boost::mutex> guard(this->mtx_);
-        std::this_thread::sleep_for(std::chrono::milliseconds(900));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1100));
         cloud::add_point(v);
     }
 };
