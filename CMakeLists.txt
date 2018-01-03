@@ -1,37 +1,49 @@
 cmake_minimum_required(VERSION 3.2)
-find_package( OpenCV REQUIRED )
 SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 
+## Dependencies ## ====================================================================
+find_package( OpenCV REQUIRED )
+## ============ ## ====================================================================
+
 project(FLY)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64 -std=gnu++11")
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
-# Fly library variables
-set(FLY_LIB_NAME Fly)
-file(GLOB FLY_SOURCES src/*.cpp)
-file(GLOB FLY_HEADERS include/*.h)
-
-# Fly demo variables
-set(FLY_DEMO_NAME FlyDemo)
-set(DEMO_MAIN demo/main.cpp)
-
-# Fly test variables
-set(FLY_TEST_NAME FlyTest)
-set(FLY_TEST_DIR test)
-
-# Fly library definition
-include_directories(include)
-add_library (${FLY_LIB_NAME} ${FLY_SOURCES} ${FLY_HEADERS})
-target_link_libraries (${FLY_LIB_NAME} ${OpenCV_LIBS})
-
-# Fly demot definition
-add_executable (${FLY_DEMO_NAME} ${DEMO_MAIN})
-target_link_libraries (${FLY_DEMO_NAME} ${FLY_LIB_NAME})
-
-# Fly test definition
-add_subdirectory(${FLY_TEST_DIR})
 enable_testing()
-add_test(NAME MyTest COMMAND Test)
+
+## Target names ## ===================================
+# Fly library
+set(FLY_LIB_TARGET Fly)
+
+# Fly demo
+set(FLY_DEMO_TARGET FlyDemo)
+
+# Fly test
+set(FLY_TEST_TARGET FlyTest)
+## =========== ## ===================================
+
+
+## Fly library Target definition ## ====================================================================
+add_library (${FLY_LIB_TARGET}
+        include/cloud.hpp include/fly.hpp src/cloud.cpp src/fly.cpp)
+
+target_link_libraries (${FLY_LIB_TARGET}
+        ${OpenCV_LIBS})
+
+target_include_directories(${FLY_LIB_TARGET}
+        PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/include
+        PRIVATE ${OpenCV_INCLUDE_DIRS})
+## ============ ## ====================================================================
+
+## Add subdirectories ## ============================
+add_subdirectory(demo)
+add_subdirectory(test)
+## =========== ## ===================================
 

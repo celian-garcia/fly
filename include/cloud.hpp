@@ -16,7 +16,7 @@ class cloud {
  public:
     friend std::ostream& operator<<(std::ostream&, const cloud&);
     friend bool operator==(const cloud& lhc, const cloud& rhc);
-    virtual void add_point(double x, double y, double z);
+    virtual void add_point(float x, float y, float z);
     virtual void add_point(int x, int y, int z);
     virtual void add_point(cv::Vec3f v);
 };

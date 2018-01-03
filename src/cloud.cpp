@@ -18,7 +18,7 @@ operator==(const cloud& lhc, const cloud& rhc) {
 }
 
 void
-cloud::add_point(double x, double y, double z) {
+cloud::add_point(float x, float y, float z) {
     this->add_point(cv::Vec3f(x, y, z));
 }
 
