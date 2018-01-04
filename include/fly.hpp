@@ -4,6 +4,8 @@
 #define INCLUDE_FLY_HPP_
 
 #include <string>
+#include <random>
+#include <vector>
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include "CloudContainer.hpp"
@@ -61,7 +63,7 @@ class Hello : public FlyRunnable {
 };
 
 template<class T>
-class CloudFiller : private IsDerivedFrom<T, CloudContainer> {
+class CloudFiller : private IsDerivedFrom<T, std::vector<cv::Vec3f>> {
  protected:
     T *cloud;
 
@@ -80,9 +82,16 @@ class CloudFiller : private IsDerivedFrom<T, CloudContainer> {
         }
     }
 
-    void random_filling(int size) {
+    void random_filling(int size, int min, int max) {
+        std::random_device rd;     // only used once to initialise (seed) engine
+        std::mt19937 generator(rd());    // random-number engine used (Mersenne-Twister in this case)
+        std::uniform_int_distribution<int> distrib(min, max);  // guaranteed unbiased
+
         for (int i = 0; i < size; ++i) {
-            this->cloud->add_point(cv::Vec3f(i, i, i));
+            auto random_x = distrib(generator);
+            auto random_y = distrib(generator);
+            auto random_z = distrib(generator);
+            this->cloud->add_point({random_x, random_y, random_z});
         }
     }
 };
@@ -94,7 +103,6 @@ class Recontruction3D : public FlyRunnable {
     ~Recontruction3D() = default;
 };
 
-} /* namespace fly */
-
+}  // namespace fly
 
 #endif  // INCLUDE_FLY_HPP_
