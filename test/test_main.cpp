@@ -30,6 +30,7 @@ BOOST_AUTO_TEST_CASE(hello) {
 }
 
 BOOST_AUTO_TEST_CASE(populate_cloud) {
+    // Fill the references
     fly::CloudThread cloud_ref_2;
     fly::CloudThread cloud_ref_10;
     for (int i = 0; i < 2; ++i) {
@@ -42,8 +43,12 @@ BOOST_AUTO_TEST_CASE(populate_cloud) {
     fly::CloudPopulate<fly::CloudThread> cp;
     fly::CloudThread& cloud = cp.get_cloud_reference();
     boost::thread t(boost::bind(&fly::CloudPopulate<fly::CloudThread>::run, &cp));
+
+    // Wait 3 sec to wait for 2 points which takes 2 x 1.1 sec.
     std::this_thread::sleep_for(std::chrono::milliseconds(3000));
     BOOST_CHECK_EQUAL(cloud_ref_2, cloud);
+
+    // Wait for the end of thread method (10 points added)
     t.join();
     BOOST_CHECK_EQUAL(cloud_ref_10, cloud);
 }
