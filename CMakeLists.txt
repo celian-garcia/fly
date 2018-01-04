@@ -5,7 +5,7 @@ SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 find_package(OpenCV REQUIRED)
 ## ============ ## ====================================================================
 
-project(fly VERSION 0.0.1 DESCRIPTION "C++ library of 3D reconstruction.")
+project(fly VERSION 0.1 DESCRIPTION "C++ library of 3D reconstruction.")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
