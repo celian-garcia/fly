@@ -33,7 +33,7 @@ set(FLY_TEST_TARGET FlyTest)
 
 ## Fly library Target definition ## ====================================================================
 add_library(${FLY_LIB_TARGET} SHARED
-        include/cloud.hpp include/fly.hpp src/cloud.cpp src/fly.cpp)
+        include/CloudContainer.hpp include/fly.hpp src/CloudContainer.cpp src/fly.cpp)
 
 target_link_libraries(${FLY_LIB_TARGET}
         ${OpenCV_LIBS})
@@ -44,7 +44,7 @@ target_include_directories(${FLY_LIB_TARGET}
 
 install(TARGETS ${FLY_LIB_TARGET}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(FILES include/fly.hpp include/cloud.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fly)
+install(FILES include/fly.hpp include/CloudContainer.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fly)
 
 set_target_properties(${FLY_LIB_TARGET} PROPERTIES
         VERSION ${PROJECT_VERSION}

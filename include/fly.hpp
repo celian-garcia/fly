@@ -2,10 +2,11 @@
 
 #ifndef INCLUDE_FLY_HPP_
 #define INCLUDE_FLY_HPP_
+
 #include <string>
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include "./cloud.hpp"
+#include "CloudContainer.hpp"
 
 namespace fly {
 
@@ -18,18 +19,27 @@ namespace fly {
 // with testable value
 template<typename D, typename B>
 class IsDerivedFrom {
-    class No {};
+    class No {
+    };
+
     class Yes {
         No no[3];
     };
-    static Yes Test(B*);  // not defined
+
+    static Yes Test(B *);  // not defined
     static No Test(...);  // not defined
 
-    static void Constraints(D* p) { B* pb = p; pb = p; }
+    static void Constraints(D *p) {
+        B *pb = p;
+        pb = p;
+    }
 
  public:
-    enum { Is = sizeof(Test(static_cast<D*>(0))) == sizeof(Yes) };
-    IsDerivedFrom() { void(*p)(D*) = Constraints; }
+    enum {
+        Is = sizeof(Test(static_cast<D *>(0))) == sizeof(Yes)
+    };
+
+    IsDerivedFrom() { void (*p)(D *) = Constraints; }
 };
 // --> end ///////////////////////////////////////////////////////
 
@@ -42,24 +52,37 @@ class Hello : public FlyRunnable {
     std::string mName;
  public:
     Hello() : mName("John Doe") {}
-    explicit Hello(const std::string& name) : mName(name) {}
+
+    explicit Hello(const std::string &name) : mName(name) {}
+
     std::string get_name();
+
     void run();
 };
 
-template <class T>
-class CloudPopulate : public FlyRunnable, private IsDerivedFrom<T, cloud> {
+template<class T>
+class CloudFiller : private IsDerivedFrom<T, CloudContainer> {
  protected:
-    T cloud;
+    T *cloud;
 
  public:
-    CloudPopulate() = default;
-    T& get_cloud_reference() {
-        return this->cloud;
+    CloudFiller() = default;
+
+    explicit CloudFiller(T *cloud) : cloud(cloud) {}
+
+    void linear_filling() {
+        linear_filling(10);
     }
-    void run() {
-        for (int i = 0; i < 10; ++i) {
-            this->cloud.add_point(cv::Vec3f(i, i, i));
+
+    void linear_filling(int size) {
+        for (int i = 0; i < size; ++i) {
+            this->cloud->add_point(cv::Vec3f(i, i, i));
+        }
+    }
+
+    void random_filling(int size) {
+        for (int i = 0; i < size; ++i) {
+            this->cloud->add_point(cv::Vec3f(i, i, i));
         }
     }
 };
@@ -67,6 +90,7 @@ class CloudPopulate : public FlyRunnable, private IsDerivedFrom<T, cloud> {
 class Recontruction3D : public FlyRunnable {
  public:
     Recontruction3D() = default;
+
     ~Recontruction3D() = default;
 };
 

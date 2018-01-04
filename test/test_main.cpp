@@ -6,17 +6,19 @@
 #include "fly.hpp"
 #include <boost/thread.hpp>
 #include <boost/test/unit_test.hpp>
+#include <new>
 
 namespace fly {
-class CloudThread : public cloud {
+class CloudThread : public CloudContainer {
  protected:
     boost::mutex mtx_;
  public:
-    using cloud::add_point;
+    using CloudContainer::add_point;
+
     virtual void add_point(cv::Vec3f v) {
         boost::lock_guard<boost::mutex> guard(this->mtx_);
         std::this_thread::sleep_for(std::chrono::milliseconds(1100));
-        cloud::add_point(v);
+        CloudContainer::add_point(v);
     }
 };
 }  // namespace fly
@@ -30,7 +32,7 @@ BOOST_AUTO_TEST_CASE(hello) {
 }
 
 BOOST_AUTO_TEST_CASE(populate_cloud) {
-    // Fill the references
+    // Fill the test references
     fly::CloudThread cloud_ref_2;
     fly::CloudThread cloud_ref_10;
     for (int i = 0; i < 2; ++i) {
@@ -40,15 +42,18 @@ BOOST_AUTO_TEST_CASE(populate_cloud) {
         cloud_ref_10.add_point(i, i, i);
     }
 
-    fly::CloudPopulate<fly::CloudThread> cp;
-    fly::CloudThread& cloud = cp.get_cloud_reference();
-    boost::thread t(boost::bind(&fly::CloudPopulate<fly::CloudThread>::run, &cp));
+    // Do the action on cloud in another thread
+    fly::CloudThread* cloud = new fly::CloudThread();
+    fly::CloudFiller<fly::CloudThread> cp(cloud);
+    boost::thread t(boost::bind(&fly::CloudFiller<fly::CloudThread>::linear_filling, &cp));
 
     // Wait 3 sec to wait for 2 points which takes 2 x 1.1 sec.
     std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-    BOOST_CHECK_EQUAL(cloud_ref_2, cloud);
+    BOOST_CHECK_EQUAL(cloud_ref_2, *cloud);
 
     // Wait for the end of thread method (10 points added)
     t.join();
-    BOOST_CHECK_EQUAL(cloud_ref_10, cloud);
+    BOOST_CHECK_EQUAL(cloud_ref_10, *cloud);
+
+    delete(cloud);
 }

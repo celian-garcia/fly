@@ -2,8 +2,8 @@
 
 #include "./fly.hpp"
 int main(int argc, char* argv[]) {
-    fly::CloudPopulate<fly::cloud> cp;
-    cp.run();
+    fly::CloudFiller<fly::CloudContainer> cp;
+    cp.linear_filling();
 
     fly::Hello h = fly::Hello("Célian");
     h.run();
