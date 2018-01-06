@@ -22,13 +22,13 @@ enable_testing()
 
 ## Target names ## ===================================
 # Fly library
-set(FLY_LIB_TARGET Fly)
+set(FLY_LIB_TARGET fly)
 
 # Fly demo
-set(FLY_DEMO_TARGET FlyDemo)
+set(FLY_DEMO_TARGET fly-demo)
 
 # Fly test
-set(FLY_TEST_TARGET FlyTest)
+set(FLY_TEST_TARGET fly-test)
 ## =========== ## ===================================
 
 ## Fly library Target definition ## ====================================================================
