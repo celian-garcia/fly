@@ -33,7 +33,7 @@ set(FLY_TEST_TARGET fly-test)
 
 ## Fly library Target definition ## ====================================================================
 add_library(${FLY_LIB_TARGET} SHARED
-        include/CloudContainer.hpp include/fly.hpp src/CloudContainer.cpp src/fly.cpp)
+        include/CloudContainer.hpp include/fly.hpp src/CloudContainer.cpp)
 
 target_link_libraries(${FLY_LIB_TARGET}
         ${OpenCV_LIBS})
