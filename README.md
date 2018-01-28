@@ -3,7 +3,7 @@ C++ library of 3D reconstruction.
 
 # Dependencies
 - OpenCV
-- Boost
+- GTest
 
 # Install
 ```text
