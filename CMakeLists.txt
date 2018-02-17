@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 
 ## Dependencies ## ====================================================================
-find_package(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED core highgui)
 ## ============ ## ====================================================================
 
 project(fly VERSION 0.2 DESCRIPTION "C++ library of 3D reconstruction.")
