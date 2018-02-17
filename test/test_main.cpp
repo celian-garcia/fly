@@ -13,10 +13,10 @@ TEST(CloudPopulation, Linearly) {
     // Fill the test references
     std::vector<cv::Vec3f> cloud_ref_2;
     std::vector<cv::Vec3f> cloud_ref_10;
-    for (float i = 0; i < 2; ++i) {
+    for (int i = 0; i < 2; ++i) {
         cloud_ref_2.push_back({i, i, i});
     }
-    for (float i = 0; i < 10; ++i) {
+    for (int i = 0; i < 10; ++i) {
         cloud_ref_10.push_back({i, i, i});
     }
 
