@@ -5,7 +5,12 @@ jobs:
       - image: celiangarcia/fly-base:0.1
     steps:
       - checkout
-      - run: mkdir build && cd build
-      - run: cmake ..
-      - run: make -j12
-      - run: ./bin/fly-test
+      - run:
+          name: Running Build
+          command: |
+            mkdir build && cd build
+            cmake .. && make -j12
+            ./bin/fly-test
+      - run:
+          name: Running Tests
+          command: ./build/bin/fly-test
