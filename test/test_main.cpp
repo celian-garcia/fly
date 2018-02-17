@@ -2,19 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <thread>
-#include "fly.hpp"
-
-namespace fly {
-class CloudLow : public CloudContainer {
- public:
-    using CloudContainer::add_point;
-
-    virtual void add_point(cv::Vec3f v) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1100));
-        CloudContainer::add_point(v);
-    }
-};
-}  // namespace fly
+#include "fly/CloudFiller.hpp"
 
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
@@ -23,69 +11,79 @@ int main(int argc, char **argv) {
 
 TEST(CloudPopulation, Linearly) {
     // Fill the test references
-    fly::CloudLow cloud_ref_2;
-    fly::CloudLow cloud_ref_10;
-    for (int i = 0; i < 2; ++i) {
-        cloud_ref_2.add_point({i, i, i});
+    std::vector<cv::Vec3f> cloud_ref_2;
+    std::vector<cv::Vec3f> cloud_ref_10;
+    for (float i = 0; i < 2; ++i) {
+        cloud_ref_2.push_back({i, i, i});
     }
-    for (int i = 0; i < 10; ++i) {
-        cloud_ref_10.add_point({i, i, i});
+    for (float i = 0; i < 10; ++i) {
+        cloud_ref_10.push_back({i, i, i});
     }
+
+    std::vector<cv::Vec3f> cloud;
+    fly::CloudFiller filler;
 
     // Linear filling action of 10 points from (0, 0, 0) to (9, 9, 9)
-    auto *cloud = new fly::CloudLow();
-    auto *cp = new fly::CloudFiller<fly::CloudLow>(cloud);
-    auto t = std::thread([&] { cp->linear_filling(); });
+    filler.register_observer([&cloud](float x, float y, float z){
+        std::this_thread::sleep_for(std::chrono::milliseconds(110));
+        cloud.push_back({x, y, z});
+    });
 
-    // Wait 3 sec to wait for 2 points which takes 2 x 1.1 sec.
-    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-    ASSERT_EQ(cloud_ref_2, *cloud);
+    auto t = std::thread([&] { filler.linear_filling(); });
+
+    // Wait 0.3 sec to wait for 2 points which takes 2 x 0,11 sec.
+    std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    ASSERT_EQ(cloud_ref_2, cloud);
 
     // Wait for the end of thread method (10 points added)
     t.join();
-    ASSERT_EQ(cloud_ref_10, *cloud);
-
-    delete (cloud);
-    delete (cp);
+    ASSERT_EQ(cloud_ref_10, cloud);
 }
 
 TEST(CloudPopulation, Randomly) {
-    // Random filling action of 10 points with coordinates that randomly oscillate from -50 to 50
-    auto *cloud = new fly::CloudLow();
-    auto *cp = new fly::CloudFiller<fly::CloudLow>(cloud);
-    auto t = std::thread([&] { cp->random_filling(10, -50, 50); });
+    std::vector<cv::Vec3f> cloud;
+    fly::CloudFiller filler;
 
-    // Wait 3 sec to wait for 2 points which takes 2 x 1.1 sec.
-    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-    ASSERT_EQ(2, cloud->size());
+    // Random filling action of 10 points with coordinates that randomly oscillate from -50 to 50
+    filler.register_observer([&cloud](float x, float y, float z){
+        std::this_thread::sleep_for(std::chrono::milliseconds(110));
+        cloud.push_back({x, y, z});
+    });
+
+    auto t = std::thread([&] { filler.random_filling(10, -50, 50); });
+
+    // Wait 0.3 sec to wait for 2 points which takes 2 x 0.11 sec.
+    std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    ASSERT_EQ(2, cloud.size());
 
     // Wait for the end of thread method (10 points added)
     t.join();
-    ASSERT_EQ(10, cloud->size());
+    ASSERT_EQ(10, cloud.size());
 
     bool all_points_are_equal = false;
-    cv::Vec3f first_point = cloud->operator[](0);
-    for (unsigned int i = 1; i < cloud->size(); ++i) {
-        all_points_are_equal = first_point == cloud->operator[](i);
+    cv::Vec3f first_point = cloud[0];
+    for (unsigned int i = 1; i < cloud.size(); ++i) {
+        all_points_are_equal = first_point == cloud[i];
         if (!all_points_are_equal) {
             break;
         }
     }
     ASSERT_EQ(false, all_points_are_equal);
-
-    delete (cloud);
-    delete (cp);
 }
 
 TEST(CloudPopulation, WithDiamond) {
-    auto *cloud = new fly::CloudContainer();
-    auto *cp = new fly::CloudFiller<fly::CloudContainer>(cloud);
+    std::vector<cv::Vec3f> cloud;
+    fly::CloudFiller filler;
+
+    filler.register_observer([&cloud](float x, float y, float z){
+        cloud.push_back({x, y, z});
+    });
 
     int nb_subdivisions = 5;
     double top_radius = 3, mid_radius = 4, top_height = 5, mid_height = 4;
     cv::Vec3f bot_point = {1, 1, 2};
     auto t = std::thread([&] {
-        cp->diamond_filling(nb_subdivisions, top_radius, mid_radius, top_height, mid_height, bot_point);
+        filler.diamond_filling(nb_subdivisions, top_radius, mid_radius, top_height, mid_height, bot_point);
     });
 
     // Wait for the end of thread method
@@ -96,14 +94,11 @@ TEST(CloudPopulation, WithDiamond) {
     cv::Vec3f p_1(-1.90175f, 1.76147, 7);
     cv::Vec3f p_2(-2.869f, 2.01529, 6);
 
-    double err_0 = cv::norm(p_0 - cloud->operator[](0));
-    double err_1 = cv::norm(p_1 - cloud->operator[](1));
-    double err_2 = cv::norm(p_2 - cloud->operator[](2));
+    double err_0 = cv::norm(p_0 - cloud[0]);
+    double err_1 = cv::norm(p_1 - cloud[1]);
+    double err_2 = cv::norm(p_2 - cloud[2]);
 
     ASSERT_LE(0, err_0);
     ASSERT_LE(0, err_1);
     ASSERT_LE(0, err_2);
-
-    delete (cloud);
-    delete (cp);
 }

@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.2)
 SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
 
 ## Dependencies ## ====================================================================
-find_package(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED core highgui)
 ## ============ ## ====================================================================
 
-project(fly VERSION 0.2 DESCRIPTION "C++ library of 3D reconstruction.")
+project(fly VERSION 0.3 DESCRIPTION "C++ library of 3D reconstruction.")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -33,7 +33,7 @@ set(FLY_TEST_TARGET fly-test)
 
 ## Fly library Target definition ## ====================================================================
 add_library(${FLY_LIB_TARGET} SHARED
-        include/CloudContainer.hpp include/fly.hpp src/CloudContainer.cpp)
+        include/fly/CloudFiller.hpp src/CloudFiller.cpp)
 
 target_link_libraries(${FLY_LIB_TARGET}
         ${OpenCV_LIBS})
@@ -44,15 +44,14 @@ target_include_directories(${FLY_LIB_TARGET}
 
 install(TARGETS ${FLY_LIB_TARGET}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(FILES include/fly.hpp include/CloudContainer.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fly)
+install(FILES include/fly/CloudFiller.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fly)
 
 set_target_properties(${FLY_LIB_TARGET} PROPERTIES
         VERSION ${PROJECT_VERSION}
-        PUBLIC_HEADER include/fly.hpp)
+        PUBLIC_HEADER include/fly/CloudFiller.hpp)
 ## ============ ## ====================================================================
 
 ## Add subdirectories ## ============================
-add_subdirectory(demo)
 add_subdirectory(test)
 enable_testing()
 add_test(NAME FlyTestRunner COMMAND ${FLY_TEST_TARGET})
