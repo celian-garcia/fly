@@ -1,0 +1,12 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: celiangarcia/fly-base:0.1
+    steps:
+      - checkout
+
+      - run: mkdir build && cd build
+      - run: cmake ..
+      - run: make -j12
+      - run: ./bin/fly-test
