@@ -10,7 +10,6 @@ jobs:
           command: |
             mkdir build && cd build
             cmake .. && make -j12
-            ./bin/fly-test
       - run:
           name: Running Tests
           command: ./build/bin/fly-test
