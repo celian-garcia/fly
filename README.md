@@ -44,11 +44,19 @@ Cflags: -I${includedir}
 # Use it in your CMakeLists.txt
 Once you have installed the library, you can use it like this in cmake.
 
+CmakeLists.txt
 ```cmake
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(Fly REQUIRED fly)
 target_link_libraries(MyTarget ${Fly_LIBRARIES})
 target_include_directories(MyTarget PRIVATE|PUBLIC ${Fly_INCLUDE_DIRS})
+...
+```
+
+Your cpp file
+```c++
+#include <fly/CloudFiller.hpp>
+...
 ```
 
 `MyTarget` being a target you've already defined.
